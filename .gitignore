@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Environment / secrets
+.env
+.env.*
+*_token.txt
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Build outputs
+dist/
+build/
+out/
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/settings.json
+*.swp
+*.swo
