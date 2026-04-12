@@ -222,13 +222,109 @@
   <section class="panel panel--result" id="resultPanel" hidden>
     <h2 class="panel__title">Generated Output</h2>
 
-    <!-- Data record card -->
-    <div class="data-card">
-      <div class="data-card__photo">
-        <img id="photoPreview" src="./theonly.jpg" alt="Applicant">
-        <span class="data-card__photo-label">APPLICANT PHOTO</span>
+    <!-- ── View toggle ── -->
+    <div class="view-toggle">
+      <button class="view-btn view-btn--active" id="viewCard">&#9646; Card View</button>
+      <button class="view-btn" id="viewRecord">&#9776; Record View</button>
+    </div>
+
+    <!-- ══ CARD VIEW — educational data card mockup ══ -->
+    <div id="cardView">
+      <p class="disclaimer">&#9888; EDUCATIONAL DATA CARD — NOT A GOVERNMENT-ISSUED DOCUMENT</p>
+      <div class="dl-card">
+        <div class="dl-card__header">
+          <span class="dl-card__state-abbr" id="cardState">CA</span>
+          <div>
+            <div class="dl-card__title" id="cardStateLabel">CALIFORNIA</div>
+            <div class="dl-card__subtitle">DRIVER LICENSE</div>
+          </div>
+          <span class="dl-card__class-badge">CLASS <span id="cardClass">C</span></span>
+        </div>
+
+        <div class="dl-card__body">
+          <!-- Photo column -->
+          <div class="dl-card__photo-col">
+            <img id="cardPhoto" src="./theonly.jpg" alt="Applicant">
+          </div>
+
+          <!-- Main fields column -->
+          <div class="dl-card__fields-col">
+            <div class="dl-card__field dl-card__name">
+              <span class="dl-card__label">LN</span>
+              <span class="dl-card__value" id="cardLastName">JOHNSON</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">FN</span>
+              <span class="dl-card__value" id="cardFirstName">SAMI</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">DL</span>
+              <span class="dl-card__value dl-card__dlnum" id="cardDL">—</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">EXP</span>
+              <span class="dl-card__value" id="cardExp">—</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">DOB</span>
+              <span class="dl-card__value" id="cardDob">—</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">ISS</span>
+              <span class="dl-card__value" id="cardIss">—</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">SEX</span>
+              <span class="dl-card__value" id="cardSex">M</span>
+            </div>
+          </div>
+
+          <!-- Side fields column -->
+          <div class="dl-card__side-col">
+            <div class="dl-card__field">
+              <span class="dl-card__label">EYES</span>
+              <span class="dl-card__value" id="cardEyes">BRN</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">HAIR</span>
+              <span class="dl-card__value" id="cardHair">BLK</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">HGT</span>
+              <span class="dl-card__value" id="cardHgt">5'-10"</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">WGT</span>
+              <span class="dl-card__value" id="cardWgt">132 lb</span>
+            </div>
+            <div class="dl-card__field">
+              <span class="dl-card__label">RSTR</span>
+              <span class="dl-card__value" id="cardRstr">NONE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dl-card__address">
+          <span class="dl-card__label">ADDRESS</span>
+          <span id="cardAddr">1 FIRST AMERICAN WAY, SANTA ANA CA 92707</span>
+        </div>
+
+        <div class="dl-card__footer">
+          <div class="dl-card__dd">DD&nbsp;<span id="cardDD">—</span></div>
+          <div class="dl-card__sample-stamp">SAMPLE · EDUCATIONAL USE ONLY</div>
+        </div>
       </div>
-      <dl class="data-card__fields" id="fieldDisplay"></dl>
+    </div>
+
+    <!-- ══ RECORD VIEW — database-style field list ══ -->
+    <div id="recordView" hidden>
+      <div class="data-card">
+        <div class="data-card__photo">
+          <img id="photoPreview" src="./theonly.jpg" alt="Applicant">
+          <span class="data-card__photo-label">APPLICANT PHOTO</span>
+        </div>
+        <dl class="data-card__fields" id="fieldDisplay"></dl>
+      </div>
     </div>
 
     <!-- Validation badge -->

@@ -138,6 +138,10 @@ input[readonly] { opacity: .65; cursor: default; }
 }
 
 /* height selects side by side */
+.height-row {
+  display: flex;
+  gap: .5rem;
+}
 .height-row select { flex: 1; }
 
 /* ── Buttons ─────────────────────────────────────────── */
@@ -327,5 +331,178 @@ input[readonly] { opacity: .65; cursor: default; }
   margin-top: 1rem;
   padding: .75rem 1.25rem;
   text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════
+   View toggle tabs
+══════════════════════════════════════════════════════ */
+.view-toggle {
+  display: flex;
+  gap: .35rem;
+  margin-bottom: .85rem;
+}
+.view-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) / 2);
+  color: var(--text-sub);
+  cursor: pointer;
+  font-size: .78rem;
+  font-family: var(--font);
+  padding: .3rem .75rem;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.view-btn--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════════════
+   Disclaimer banner
+══════════════════════════════════════════════════════ */
+.disclaimer {
+  background: rgba(245,158,11,.12);
+  border: 1px solid var(--warn);
+  border-radius: calc(var(--radius) / 2);
+  color: var(--warn);
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  margin-bottom: .75rem;
+  padding: .35rem .75rem;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════
+   DL educational data card
+   Layout: card-like structure showing field positions
+   NOT a replica of any state-issued document.
+   No state seal, no holograms, no security features.
+══════════════════════════════════════════════════════ */
+.dl-card {
+  background: var(--surface2);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  font-family: var(--mono);
+  font-size: .82rem;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(79,128,255,.2);
+}
+
+/* header strip */
+.dl-card__header {
+  align-items: center;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  gap: .75rem;
+  padding: .5rem .9rem;
+}
+.dl-card__state-abbr {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  line-height: 1;
+}
+.dl-card__title    { font-size: .95rem; font-weight: 700; letter-spacing: .12em; }
+.dl-card__subtitle { font-size: .65rem; letter-spacing: .18em; opacity: .85; }
+.dl-card__class-badge {
+  margin-left: auto;
+  background: rgba(255,255,255,.2);
+  border-radius: 4px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  padding: .2rem .5rem;
+}
+
+/* body: photo + two field columns */
+.dl-card__body {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: .75rem;
+  padding: .75rem .9rem;
+}
+@media (max-width: 500px) {
+  .dl-card__body { grid-template-columns: 70px 1fr; }
+  .dl-card__side-col { grid-column: 2; }
+}
+
+.dl-card__photo-col img {
+  border: 2px solid var(--border);
+  border-radius: calc(var(--radius) / 2);
+  display: block;
+  height: 110px;
+  object-fit: cover;
+  width: 90px;
+}
+
+.dl-card__fields-col,
+.dl-card__side-col {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.dl-card__field {
+  display: flex;
+  gap: .4rem;
+  align-items: baseline;
+}
+.dl-card__label {
+  color: var(--text-sub);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  min-width: 2.8rem;
+  white-space: nowrap;
+}
+.dl-card__value {
+  color: var(--text);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+.dl-card__name .dl-card__value { font-size: 1rem; font-weight: 700; color: var(--accent2); }
+.dl-card__dlnum { font-size: .92rem !important; color: var(--ok) !important; }
+
+/* address strip */
+.dl-card__address {
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: .65rem;
+  padding: .45rem .9rem;
+  font-size: .75rem;
+  align-items: baseline;
+}
+
+/* footer strip */
+.dl-card__footer {
+  align-items: center;
+  background: rgba(0,0,0,.15);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  padding: .35rem .9rem;
+}
+.dl-card__dd {
+  color: var(--text-sub);
+  font-size: .65rem;
+  letter-spacing: .04em;
+  word-break: break-all;
+  max-width: 60%;
+}
+.dl-card__sample-stamp {
+  background: rgba(245,158,11,.15);
+  border: 1px solid var(--warn);
+  border-radius: 4px;
+  color: var(--warn);
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  padding: .15rem .45rem;
 }
 

@@ -381,6 +381,48 @@ function buildFieldTable(data) {
 }
 
 // ══════════════════════════════════════════════════════════════════════
+//  Card view filler
+// ══════════════════════════════════════════════════════════════════════
+
+const STATE_NAMES = {
+  AL:'ALABAMA',AK:'ALASKA',AZ:'ARIZONA',AR:'ARKANSAS',CA:'CALIFORNIA',
+  CO:'COLORADO',CT:'CONNECTICUT',DE:'DELAWARE',FL:'FLORIDA',GA:'GEORGIA',
+  HI:'HAWAII',ID:'IDAHO',IL:'ILLINOIS',IN:'INDIANA',IA:'IOWA',
+  KS:'KANSAS',KY:'KENTUCKY',LA:'LOUISIANA',ME:'MAINE',MD:'MARYLAND',
+  MA:'MASSACHUSETTS',MI:'MICHIGAN',MN:'MINNESOTA',MS:'MISSISSIPPI',MO:'MISSOURI',
+  MT:'MONTANA',NE:'NEBRASKA',NV:'NEVADA',NH:'NEW HAMPSHIRE',NJ:'NEW JERSEY',
+  NM:'NEW MEXICO',NY:'NEW YORK',NC:'NORTH CAROLINA',ND:'NORTH DAKOTA',OH:'OHIO',
+  OK:'OKLAHOMA',OR:'OREGON',PA:'PENNSYLVANIA',RI:'RHODE ISLAND',SC:'SOUTH CAROLINA',
+  SD:'SOUTH DAKOTA',TN:'TENNESSEE',TX:'TEXAS',UT:'UTAH',VT:'VERMONT',
+  VA:'VIRGINIA',WA:'WASHINGTON',WV:'WEST VIRGINIA',WI:'WISCONSIN',WY:'WYOMING',
+  DC:'DISTRICT OF COLUMBIA',
+};
+
+function fillCardView(data) {
+  const sexLabel = data.sex === '1' ? 'M' : data.sex === '2' ? 'F' : 'X';
+  document.getElementById('cardState').textContent      = data.state;
+  document.getElementById('cardStateLabel').textContent = STATE_NAMES[data.state] ?? data.state;
+  document.getElementById('cardClass').textContent      = data.dlClass;
+  document.getElementById('cardLastName').textContent   = data.lastName;
+  document.getElementById('cardFirstName').textContent  = data.firstName + (data.middleName ? ' ' + data.middleName : '');
+  document.getElementById('cardDL').textContent         = data.licenseNumber;
+  document.getElementById('cardExp').textContent        = toAamvaDate(data.exp).replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+  document.getElementById('cardDob').textContent        = toAamvaDate(data.dob).replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+  document.getElementById('cardIss').textContent        = toAamvaDate(data.iss).replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+  document.getElementById('cardSex').textContent        = sexLabel;
+  document.getElementById('cardEyes').textContent       = data.eyes;
+  document.getElementById('cardHair').textContent       = data.hair;
+  document.getElementById('cardHgt').textContent        = `${data.heightFt}'-${data.heightIn}"`;
+  document.getElementById('cardWgt').textContent        = data.weight + ' lb';
+  document.getElementById('cardRstr').textContent       = data.restrictions || 'NONE';
+  document.getElementById('cardAddr').textContent       = `${data.street}, ${data.city} ${data.state} ${data.zip}`;
+  document.getElementById('cardDD').textContent         = data.dd;
+  // sync photo
+  const src = document.getElementById('photoPreview').src;
+  document.getElementById('cardPhoto').src = src;
+}
+
+// ══════════════════════════════════════════════════════════════════════
 //  Main generate handler
 // ══════════════════════════════════════════════════════════════════════
 
@@ -434,7 +476,9 @@ function onGenerate() {
     : `\u26A0 ${licenseNumber}  does NOT match ${state} format`;
   badge.className = 'badge validation-badge ' + (valid ? 'badge--ok' : 'badge--warn');
 
-  // Data card
+  // Card view
+  fillCardView(data);
+  // Record view
   buildFieldDisplay(data);
   buildFieldTable(data);
 
@@ -481,12 +525,27 @@ document.getElementById('exp').addEventListener('change', function () {
   if (this.value) document.getElementById('iss').value = calculateISS(this.value);
 });
 
-// Photo upload preview
+// Photo upload preview — sync to both record view and card view
 document.getElementById('photoUpload').addEventListener('change', function () {
   const file = this.files[0];
   if (!file) return;
   const url = URL.createObjectURL(file);
   document.getElementById('photoPreview').src = url;
+  document.getElementById('cardPhoto').src = url;
+});
+
+// View toggle
+document.getElementById('viewCard').addEventListener('click', function () {
+  document.getElementById('cardView').removeAttribute('hidden');
+  document.getElementById('recordView').setAttribute('hidden', '');
+  this.classList.add('view-btn--active');
+  document.getElementById('viewRecord').classList.remove('view-btn--active');
+});
+document.getElementById('viewRecord').addEventListener('click', function () {
+  document.getElementById('recordView').removeAttribute('hidden');
+  document.getElementById('cardView').setAttribute('hidden', '');
+  this.classList.add('view-btn--active');
+  document.getElementById('viewCard').classList.remove('view-btn--active');
 });
 
 // Download barcode as PNG
