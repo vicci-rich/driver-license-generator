@@ -27,7 +27,6 @@ async function renderDL(jsonFile) {
     scale_x: 2, scale_y: 1.5, height: 15
   });
   const barcodeImg = await loadImage(barcodeBuffer);
-  // Position barcode per our "refined" CSS: top: 73%, left: 12%, width: 75%, height: 18%
   backCtx.drawImage(barcodeImg, 600 * 0.1, 380 * 0.7, 600 * 0.8, 380 * 0.22);
   fs.writeFileSync(path.join(responsesDir, `${id}_back.jpg`), backCanvas.toBuffer('image/jpeg'));
 
@@ -38,13 +37,11 @@ async function renderDL(jsonFile) {
   const frontTemplate = await loadImage(path.join(templatesDir, 'up.jpg'));
   frontCtx.drawImage(frontTemplate, 0, 0, 600, 380);
 
-  // Overlay Photo (if exists)
+  // Overlay Photo
   const photoPath = path.join(templatesDir, data.photo || 'Photo.jpg');
   if (fs.existsSync(photoPath)) {
     const photoImg = await loadImage(photoPath);
-    // Position based on up.jpg layout (left side)
     frontCtx.drawImage(photoImg, 45, 65, 145, 185);
-    // Ghost photo (right side, lower opacity)
     frontCtx.globalAlpha = 0.5;
     frontCtx.drawImage(photoImg, 430, 210, 80, 100);
     frontCtx.globalAlpha = 1.0;
@@ -62,16 +59,69 @@ async function renderDL(jsonFile) {
   frontCtx.fillText(`DOB ${data.dateOfBirth}`, 250, 235);
   
   fs.writeFileSync(path.join(responsesDir, `${id}_front.jpg`), frontCanvas.toBuffer('image/jpeg'));
-  console.log(`[${id}] Completed!`);
+  console.log(`[${id}] Completed DL!`);
 }
 
-// CLI entry point
+async function renderPassport(jsonFile) {
+  const data = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+  const id = path.basename(jsonFile, '.json');
+
+  console.log(`[${id}] Rendering Passport...`);
+  const canvas = createCanvas(433, 564);
+  const ctx = canvas.getContext('2d');
+  const template = await loadImage(path.join(templatesDir, 'passport_template.jpg'));
+  ctx.drawImage(template, 0, 0, 433, 564);
+
+  // Overlay Photo
+  const photoPath = path.join(templatesDir, data.photo || 'Photo.jpg');
+  if (fs.existsSync(photoPath)) {
+    const photoImg = await loadImage(photoPath);
+    ctx.drawImage(photoImg, 35, 345, 125, 155);
+  }
+
+  // Overlay Data
+  ctx.fillStyle = 'black';
+  ctx.font = 'bold 12px "Courier New", monospace';
+  ctx.fillText(data.lastName, 175, 395);
+  ctx.fillText(data.firstName, 175, 415);
+  ctx.fillText(data.nationality || 'UNITED STATES OF AMERICA', 175, 435);
+  ctx.fillText(data.dateOfBirth.replace(/-/g, '/'), 175, 455);
+  ctx.fillText(data.sex === '1' ? 'M' : 'F', 340, 475);
+  ctx.fillText(data.passportNumber || '123456789', 350, 375);
+  ctx.fillText(data.issueDate.replace(/-/g, '/'), 340, 495);
+  ctx.fillText(data.expiryDate.replace(/-/g, '/'), 340, 515);
+
+  // Simple MRZ Generation
+  const surname = (data.lastName.toUpperCase() + '<<<<<<<<<<<<<<<<<<<<<<<<').slice(0, 39);
+  const names = (data.firstName.toUpperCase() + '<<<<<<<<<<<<<<<<<<<<<<<<').slice(0, 44 - surname.length - 2);
+  const line1 = `P<USA${surname}<<${names}`.padEnd(44, '<');
+  
+  const dob = data.dateOfBirth.slice(2).replace(/-/g, '');
+  const exp = data.expiryDate.slice(2).replace(/-/g, '');
+  const line2 = `${data.passportNumber || '123456789'}0USA${dob}6${data.sex === '1' ? 'M' : 'F'}${exp}5<<<<<<<<<<<<<<06`.padEnd(44, '<');
+
+  ctx.font = 'bold 14px "Courier New", monospace';
+  ctx.fillText(line1, 35, 545);
+  ctx.fillText(line2, 35, 560);
+
+  fs.writeFileSync(path.join(responsesDir, `${id}_passport.jpg`), canvas.toBuffer('image/jpeg'));
+  console.log(`[${id}] Completed Passport!`);
+}
+
+async function processRequest(jsonFile) {
+  const data = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
+  if (data.type === 'passport') {
+    await renderPassport(jsonFile);
+  } else {
+    await renderDL(jsonFile);
+  }
+}
+
 const args = process.argv.slice(2);
 if (args.length > 0) {
-  renderDL(args[0]).catch(console.error);
+  processRequest(args[0]).catch(console.error);
 } else {
-  // Process all in requests/
   fs.readdirSync(requestsDir).filter(f => f.endsWith('.json')).forEach(f => {
-    renderDL(path.join(requestsDir, f)).catch(console.error);
+    processRequest(path.join(requestsDir, f)).catch(console.error);
   });
 }

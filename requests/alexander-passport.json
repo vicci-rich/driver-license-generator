@@ -1,0 +1,12 @@
+{
+  "type": "passport",
+  "lastName": "UNKNOWN",
+  "firstName": "ALEXANDER",
+  "dateOfBirth": "1992-05-15",
+  "passportNumber": "Z98765432",
+  "nationality": "UNITED STATES OF AMERICA",
+  "sex": "1",
+  "issueDate": "2023-01-10",
+  "expiryDate": "2033-01-09",
+  "photo": "unknown.jpg"
+}
