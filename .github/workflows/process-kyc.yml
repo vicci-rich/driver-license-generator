@@ -1,0 +1,37 @@
+name: Process KYC Requests
+
+on:
+  push:
+    paths:
+      - 'requests/*.json'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install System Dependencies
+        run: sudo apt-get update && sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+
+      - name: Install Dependencies
+        run: npm install canvas bwip-js sharp
+
+      - name: Create Responses Directory
+        run: mkdir -p responses
+
+      - name: Render Driver Licenses
+        run: node scripts/render.js
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "Shadow-X1 Orchestrator"
+          git config --global user.email "orchestrator@shadow-x1.internal"
+          git add responses/
+          git commit -m "Auto-render KYC responses for push: ${GITHUB_SHA::7}" || echo "No changes to commit"
+          git push

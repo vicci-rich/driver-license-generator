@@ -10,7 +10,7 @@ const urlsToCache = [
   './index.html',
   './styles.css',
   './app.js',
-  './theonly.jpg',
+  './Photo.jpg',
 ];
 
 self.addEventListener('install', event => {
