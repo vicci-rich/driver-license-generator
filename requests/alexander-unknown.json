@@ -1,0 +1,23 @@
+{
+  "lastName": "UNKNOWN",
+  "firstName": "ALEXANDER",
+  "middleName": "M",
+  "dateOfBirth": "1992-05-15",
+  "licenseNumber": "K1234567",
+  "issuingState": "CA",
+  "address": {
+    "street": "101 CALIFORNIA ST",
+    "city": "SAN FRANCISCO",
+    "state": "CA",
+    "zip": "94111"
+  },
+  "class": "C",
+  "issueDate": "2024-05-15",
+  "expiryDate": "2029-05-15",
+  "sex": "1",
+  "eyeColor": "BLU",
+  "hairColor": "BRN",
+  "height": "071",
+  "weight": "175",
+  "photo": "unknown.jpg"
+}
