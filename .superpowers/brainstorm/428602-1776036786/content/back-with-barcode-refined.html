@@ -1,0 +1,42 @@
+<style>
+  .card-container {
+    position: relative;
+    width: 600px; /* Based on typical DL aspect ratio */
+    height: 380px; /* Adjust as needed */
+    background-image: url('data:image/jpeg;base64,$A_B64');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 20px auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    overflow: hidden; /* Ensure barcode stays within card bounds */
+  }
+
+  .barcode-overlay {
+    position: absolute;
+    /* Refined values based on down.jpg */
+    top: 73%;    /* Adjusted from 62% */
+    left: 12%;   /* Adjusted from 17% */
+    width: 75%;  /* Adjusted from 66% */
+    height: 18%; /* Adjusted from 25% */
+    background-image: url('data:image/png;base64,$BARCODE_B64');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Optional: Add a border for visual debugging */
+    /* border: 1px solid blue; */
+  }
+
+  h2 { text-align: center; margin-top: 40px; }
+  p { text-align: center; font-size: 0.9em; color: var(--text-secondary); }
+</style>
+
+<h2>Generated Back of Driver's License (Refined Barcode Placement)</h2>
+<p>This shows the California DL back template (A.jpg) with the newly generated PDF417 barcode overlaid.</p>
+<p>Placement adjusted based on reference from <code>down.jpg</code>.</p>
+
+<div class="card-container">
+  <div class="barcode-overlay"></div>
+</div>
+
+<p>Please review the refined placement. We can further adjust the CSS if needed. After this, we will work on the front of the license using <code>up.jpg</code>.</p>

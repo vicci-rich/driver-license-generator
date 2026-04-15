@@ -1,0 +1,42 @@
+<style>
+  .card-container {
+    position: relative;
+    width: 600px; /* Based on typical DL aspect ratio */
+    height: 380px; /* Adjust as needed */
+    background-image: url('data:image/jpeg;base64,$A_B64');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 20px auto;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    overflow: hidden; /* Ensure barcode stays within card bounds */
+  }
+
+  .barcode-overlay {
+    position: absolute;
+    /* Adjust these values to fine-tune position based on A.jpg */
+    top: 62%;
+    left: 17%;
+    width: 66%;
+    height: 25%;
+    background-image: url('data:image/png;base64,$BARCODE_B64');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Optional: Add a border for visual debugging */
+    /* border: 1px solid red; */
+  }
+
+  h2 { text-align: center; margin-top: 40px; }
+  p { text-align: center; font-size: 0.9em; color: var(--text-secondary); }
+</style>
+
+<h2>Generated Back of Driver's License</h2>
+<p>This shows the California DL back template (A.jpg) with the newly generated PDF417 barcode overlaid.</p>
+
+<div class="card-container">
+  <div class="barcode-overlay"></div>
+</div>
+
+<p>Please review the placement and appearance. We can adjust the <code>top</code>, <code>left</code>, <code>width</code>, and <code>height</code> percentages in the <code>.barcode-overlay</code> CSS if needed for a more precise fit.</p>
+<p>Next, we can focus on aligning the generator's data with AAMVA and then integrating this visual into the main frontend.</p>

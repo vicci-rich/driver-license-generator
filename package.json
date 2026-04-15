@@ -3,5 +3,8 @@
     "bwip-js": "^4.9.0",
     "canvas": "^3.2.3",
     "sharp": "^0.34.5"
+  },
+  "dependencies": {
+    "mrz-generator": "^1.1.1"
   }
 }

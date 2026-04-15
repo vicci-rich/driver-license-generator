@@ -1,0 +1,34 @@
+{
+  "id": "usage-identity",
+  "status": "verified",
+  "documentType": "DL",
+  "issuedAt": "2026-04-15T05:38:51.614Z",
+  "details": {
+    "aamva_compliant": true,
+    "barcode_match": true,
+    "visual_match": true,
+    "ocr_data": {
+      "lastName": "USAGE",
+      "firstName": "IDENT",
+      "middleName": "X",
+      "dateOfBirth": "1995-08-20",
+      "licenseNumber": "U8888888",
+      "issuingState": "CA",
+      "address": {
+        "street": "888 PRIVACY BLVD",
+        "city": "CYBER CITY",
+        "state": "CA",
+        "zip": "90001"
+      },
+      "class": "C",
+      "issueDate": "2024-01-01",
+      "expiryDate": "2029-01-01",
+      "sex": "1",
+      "eyeColor": "GRN",
+      "hairColor": "BLK",
+      "height": "072",
+      "weight": "180",
+      "photo": "usage.jpg"
+    }
+  }
+}

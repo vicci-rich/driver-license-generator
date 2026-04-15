@@ -1,0 +1,67 @@
+<style>
+  .comparison { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; }
+  .card-box { flex: 1; min-width: 300px; padding: 15px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-secondary); }
+  .card-img { width: 100%; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); border: 1px solid #333; }
+  .tag { font-size: 0.8em; padding: 2px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; display: inline-block; }
+  .tag-current { background: #ff4d4d; color: white; }
+  .tag-target { background: #2ecc71; color: white; }
+  .diff-list { margin-top: 15px; font-size: 0.9em; }
+  .diff-item { margin-bottom: 5px; color: var(--text-secondary); }
+  .diff-item strong { color: var(--text-primary); }
+  .overlay-demo { position: relative; width: 433px; height: 564px; margin: 0 auto; background: url('data:image/jpeg;base64,$FRONT_B64') no-repeat center/cover; }
+  .overlay-demo .field { position: absolute; font-family: 'OCR-B', monospace; color: #000; font-size: 14px; font-weight: bold; }
+  .overlay-demo .ln { top: 120px; left: 160px; }
+  .overlay-demo .fn { top: 140px; left: 160px; }
+</style>
+
+<h2>Visual Alignment Proposal</h2>
+<p class="subtitle">Comparing current assets with high-fidelity targets from Example/</p>
+
+<div class="comparison">
+  <!-- Current Asset -->
+  <div class="card-box">
+    <div class="tag tag-current">Current: theonly.jpg</div>
+    <img src="data:image/jpeg;base64,$CURRENT_B64" class="card-img" style="aspect-ratio: 330/429;">
+    <ul class="diff-list">
+      <li class="diff-item"><strong>Dimensions:</strong> 330x429 (0.76 ratio)</li>
+      <li class="diff-item"><strong>Visuals:</strong> Basic mockup, non-AAMVA compliant.</li>
+    </ul>
+  </div>
+
+  <!-- Target Asset -->
+  <div class="card-box">
+    <div class="tag tag-target">Target: front.jpg</div>
+    <img src="data:image/jpeg;base64,$FRONT_B64" class="card-img" style="aspect-ratio: 433/564;">
+    <ul class="diff-list">
+      <li class="diff-item"><strong>Dimensions:</strong> 433x564 (0.76 ratio)</li>
+      <li class="diff-item"><strong>Visuals:</strong> High-fidelity real template.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 40px;">
+  <h3>Proposed Strategy</h3>
+  <div class="options" data-multiselect>
+    <div class="option" data-choice="background-template" onclick="toggleSelect(this)">
+      <div class="letter">1</div>
+      <div class="content">
+        <h4>Use Template Backgrounds</h4>
+        <p>Replace CSS generated cards with <code>front.jpg</code> and <code>back.jpg</code> as container backgrounds.</p>
+      </div>
+    </div>
+    <div class="option" data-choice="precise-overlay" onclick="toggleSelect(this)">
+      <div class="letter">2</div>
+      <div class="content">
+        <h4>CSS Field Overlays</h4>
+        <p>Position data fields (LN, FN, DL#) using absolute positioning to match the template's designated areas.</p>
+      </div>
+    </div>
+    <div class="option" data-choice="aamva-sync" onclick="toggleSelect(this)">
+      <div class="letter">3</div>
+      <div class="content">
+        <h4>AAMVA Data Sync</h4>
+        <p>Update backend/frontend to strictly follow the <code>smart-kyc/us-driver-license.schema.json</code>.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{
+  "id": "alexander-passport",
+  "status": "verified",
+  "documentType": "PASSPORT",
+  "issuedAt": "2026-04-15T05:38:50.963Z",
+  "details": {
+    "mrz_compliant": true,
+    "visual_match": true,
+    "ocr_data": {
+      "type": "passport",
+      "lastName": "UNKNOWN",
+      "firstName": "ALEXANDER",
+      "dateOfBirth": "1992-05-15",
+      "passportNumber": "Z98765432",
+      "nationality": "UNITED STATES OF AMERICA",
+      "sex": "1",
+      "issueDate": "2023-01-10",
+      "expiryDate": "2033-01-09",
+      "photo": "unknown.jpg"
+    }
+  }
+}

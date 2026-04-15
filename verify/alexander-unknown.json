@@ -1,0 +1,34 @@
+{
+  "id": "alexander-unknown",
+  "status": "verified",
+  "documentType": "DL",
+  "issuedAt": "2026-04-15T05:38:51.193Z",
+  "details": {
+    "aamva_compliant": true,
+    "barcode_match": true,
+    "visual_match": true,
+    "ocr_data": {
+      "lastName": "UNKNOWN",
+      "firstName": "ALEXANDER",
+      "middleName": "M",
+      "dateOfBirth": "1992-05-15",
+      "licenseNumber": "K1234567",
+      "issuingState": "CA",
+      "address": {
+        "street": "101 CALIFORNIA ST",
+        "city": "SAN FRANCISCO",
+        "state": "CA",
+        "zip": "94111"
+      },
+      "class": "C",
+      "issueDate": "2024-05-15",
+      "expiryDate": "2029-05-15",
+      "sex": "1",
+      "eyeColor": "BLU",
+      "hairColor": "BRN",
+      "height": "071",
+      "weight": "175",
+      "photo": "unknown.jpg"
+    }
+  }
+}

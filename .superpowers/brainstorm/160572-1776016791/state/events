@@ -1,0 +1,3 @@
+{"type":"click","text":"1\n      \n        Use Template Backgrounds\n        Replace CSS generated cards with front.jpg and back.jpg as container backgrounds.","choice":"background-template","id":null,"timestamp":1776017078727}
+{"type":"click","text":"2\n      \n        CSS Field Overlays\n        Position data fields (LN, FN, DL#) using absolute positioning to match the template's designated areas.","choice":"precise-overlay","id":null,"timestamp":1776017080268}
+{"type":"click","text":"3\n      \n        AAMVA Data Sync\n        Update backend/frontend to strictly follow the smart-kyc/us-driver-license.schema.json.","choice":"aamva-sync","id":null,"timestamp":1776017081321}
