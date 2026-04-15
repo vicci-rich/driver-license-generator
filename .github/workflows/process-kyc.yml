@@ -32,6 +32,6 @@ jobs:
         run: |
           git config --global user.name "Shadow-X1 Orchestrator"
           git config --global user.email "orchestrator@shadow-x1.internal"
-          git add responses/
-          git commit -m "Auto-render KYC responses for push: ${GITHUB_SHA::7}" || echo "No changes to commit"
+          git add responses/ verify/
+          git commit -m "Auto-render KYC responses and validation mocks for push: ${GITHUB_SHA::7}" || echo "No changes to commit"
           git push
