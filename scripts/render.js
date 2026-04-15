@@ -11,55 +11,105 @@ async function renderDL(jsonFile) {
   const data = JSON.parse(fs.readFileSync(jsonFile, 'utf8'));
   const id = path.basename(jsonFile, '.json');
 
+  console.log(`[${id}] Rendering high-fidelity DL (Shadow-X1 v2)...`);
+  
+  // Use 1280x800 resolution for high-fidelity
+  const width = 1280;
+  const height = 800;
+  
   // --- 1. RENDER BACK ---
-  console.log(`[${id}] Rendering back...`);
-  const backCanvas = createCanvas(600, 380);
+  const backCanvas = createCanvas(width, height);
   const backCtx = backCanvas.getContext('2d');
-  const backTemplate = await loadImage(path.join(templatesDir, 'down.jpg'));
-  backCtx.drawImage(backTemplate, 0, 0, 600, 380);
+  const backTemplate = await loadImage(path.join(templatesDir, 'templates', 'down.jpg'));
+  backCtx.drawImage(backTemplate, 0, 0, width, height);
 
-  // Generate AAMVA string for barcode
+  // AAMVA data for barcode
   const aamvaData = `@\n\x1e\rANSI 6360140800\nDL\nDAQ${data.licenseNumber}\nDCS${data.lastName}\nDAC${data.firstName}\nDAD${data.middleName || 'NONE'}\nDBA${data.expiryDate.replace(/-/g, '')}\nDBB${data.dateOfBirth.replace(/-/g, '')}\nDBD${data.issueDate.replace(/-/g, '')}\nDBC${data.sex || '1'}\nDAY${data.eyeColor || 'BRN'}\nDAZ${data.hairColor || 'BLK'}\nDAU${data.height || '070'}\nDAW${data.weight || '150'}\nDAG${data.address.street}\nDAI${data.address.city}\nDAJ${data.address.state}\nDAK${data.address.zip.replace(/-/g, '')}000000\nDCAC\nDCBNONE\nDCDNONE\nDCF${data.issueDate.replace(/-/g, '')}9298IFMZ\nDCGUSA\r`;
 
   const barcodeBuffer = await bwipjs.toBuffer({
     bcid: 'pdf417',
     text: aamvaData,
-    scale_x: 2, scale_y: 1.5, height: 15
+    scale_x: 4, scale_y: 3, height: 20
   });
   const barcodeImg = await loadImage(barcodeBuffer);
-  backCtx.drawImage(barcodeImg, 600 * 0.1, 380 * 0.7, 600 * 0.8, 380 * 0.22);
+  // Barcode placement on back (scaled for 1280x800)
+  backCtx.drawImage(barcodeImg, width * 0.1, height * 0.7, width * 0.8, height * 0.22);
   fs.writeFileSync(path.join(responsesDir, `${id}_back.jpg`), backCanvas.toBuffer('image/jpeg'));
 
   // --- 2. RENDER FRONT ---
-  console.log(`[${id}] Rendering front...`);
-  const frontCanvas = createCanvas(600, 380);
+  const frontCanvas = createCanvas(width, height);
   const frontCtx = frontCanvas.getContext('2d');
-  const frontTemplate = await loadImage(path.join(templatesDir, 'up.jpg'));
-  frontCtx.drawImage(frontTemplate, 0, 0, 600, 380);
+  const frontTemplate = await loadImage(path.join(templatesDir, 'templates', 'up.jpg'));
+  frontCtx.drawImage(frontTemplate, 0, 0, width, height);
 
   // Overlay Photo
-  const photoPath = path.join(templatesDir, data.photo || 'Photo.jpg');
+  const photoPath = path.join(templatesDir, 'templates', data.photo || 'Photo.jpg');
   if (fs.existsSync(photoPath)) {
     const photoImg = await loadImage(photoPath);
-    frontCtx.drawImage(photoImg, 45, 65, 145, 185);
-    frontCtx.globalAlpha = 0.5;
-    frontCtx.drawImage(photoImg, 430, 210, 80, 100);
+    // Position matched to up.jpg / sorry.jpg layout (left side)
+    // Coords for 1280x800 scaling
+    frontCtx.drawImage(photoImg, 100, 140, 390, 500);
+    // Ghost photo (right side, lower opacity, black & white-ish look)
+    frontCtx.globalAlpha = 0.45;
+    frontCtx.filter = 'grayscale(100%) brightness(1.2)';
+    frontCtx.drawImage(photoImg, 830, 440, 185, 235);
     frontCtx.globalAlpha = 1.0;
+    frontCtx.filter = 'none';
   }
 
-  // Overlay Text
-  frontCtx.fillStyle = 'black';
-  frontCtx.font = 'bold 16px "Arial"';
-  frontCtx.fillText(`DL ${data.licenseNumber}`, 250, 75);
-  frontCtx.fillText(`EXP ${data.expiryDate}`, 250, 100);
-  frontCtx.fillText(`LN ${data.lastName}`, 250, 125);
-  frontCtx.fillText(`FN ${data.firstName}`, 250, 150);
-  frontCtx.fillText(data.address.street, 250, 180);
-  frontCtx.fillText(`${data.address.city}, ${data.address.state} ${data.address.zip}`, 250, 205);
-  frontCtx.fillText(`DOB ${data.dateOfBirth}`, 250, 235);
+  // Overlay Text - Red/Brown-ish for fields
+  const fieldColor = '#4a2c2a'; 
+  const valColor = '#000000';
   
+  frontCtx.font = 'bold 36px "Arial"';
+  
+  // Placement refined for 1280x800
+  const xOffset = 520;
+  let y = 160;
+  const lineSpacing = 55;
+
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('DL', xOffset - 60, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.licenseNumber, xOffset, y);
+  y += lineSpacing;
+
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('EXP', xOffset - 60, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.expiryDate.replace(/-/g, '/'), xOffset, y);
+  y += lineSpacing;
+
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('LN', xOffset - 60, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.lastName, xOffset, y);
+  y += lineSpacing;
+
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('FN', xOffset - 60, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.firstName, xOffset, y);
+  y += lineSpacing;
+
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.address.street, xOffset - 60, y);
+  y += lineSpacing;
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(`${data.address.city}, ${data.address.state} ${data.address.zip}`, xOffset - 60, y);
+  y += lineSpacing;
+
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('DOB', xOffset - 60, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.dateOfBirth.replace(/-/g, '/'), xOffset, y);
+  y += lineSpacing;
+
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('RSTR', xOffset - 60, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText('NONE', xOffset + 50, y);
+  
+  // Bottom row fields
+  y = 650;
+  frontCtx.font = 'bold 30px "Arial"';
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('SEX', xOffset + 100, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.sex === '1' ? 'M' : 'F', xOffset + 170, y);
+  
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('HAIR', xOffset + 300, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.hairColor || 'BLK', xOffset + 390, y);
+  
+  frontCtx.fillStyle = fieldColor; frontCtx.fillText('EYES', xOffset + 520, y);
+  frontCtx.fillStyle = valColor;   frontCtx.fillText(data.eyeColor || 'BRN', xOffset + 610, y);
+
   fs.writeFileSync(path.join(responsesDir, `${id}_front.jpg`), frontCanvas.toBuffer('image/jpeg'));
-  console.log(`[${id}] Completed DL!`);
+  console.log(`[${id}] High-fidelity DL completed!`);
 }
 
 async function renderPassport(jsonFile) {
@@ -67,31 +117,29 @@ async function renderPassport(jsonFile) {
   const id = path.basename(jsonFile, '.json');
 
   console.log(`[${id}] Rendering Passport...`);
-  const canvas = createCanvas(433, 564);
+  const canvas = createCanvas(1280, 1600); // Higher res passport
   const ctx = canvas.getContext('2d');
-  const template = await loadImage(path.join(templatesDir, 'passport_template.jpg'));
-  ctx.drawImage(template, 0, 0, 433, 564);
+  const template = await loadImage(path.join(templatesDir, 'templates', 'passport_template.jpg'));
+  ctx.drawImage(template, 0, 0, 1280, 1600);
 
-  // Overlay Photo
-  const photoPath = path.join(templatesDir, data.photo || 'Photo.jpg');
+  // Photo
+  const photoPath = path.join(templatesDir, 'templates', data.photo || 'Photo.jpg');
   if (fs.existsSync(photoPath)) {
     const photoImg = await loadImage(photoPath);
-    ctx.drawImage(photoImg, 35, 345, 125, 155);
+    ctx.drawImage(photoImg, 100, 1000, 360, 450);
   }
 
-  // Overlay Data
+  // Data
   ctx.fillStyle = 'black';
-  ctx.font = 'bold 12px "Courier New", monospace';
-  ctx.fillText(data.lastName, 175, 395);
-  ctx.fillText(data.firstName, 175, 415);
-  ctx.fillText(data.nationality || 'UNITED STATES OF AMERICA', 175, 435);
-  ctx.fillText(data.dateOfBirth.replace(/-/g, '/'), 175, 455);
-  ctx.fillText(data.sex === '1' ? 'M' : 'F', 340, 475);
-  ctx.fillText(data.passportNumber || '123456789', 350, 375);
-  ctx.fillText(data.issueDate.replace(/-/g, '/'), 340, 495);
-  ctx.fillText(data.expiryDate.replace(/-/g, '/'), 340, 515);
+  ctx.font = 'bold 32px "Courier New", monospace';
+  ctx.fillText(data.lastName, 500, 1120);
+  ctx.fillText(data.firstName, 500, 1180);
+  ctx.fillText(data.nationality || 'UNITED STATES OF AMERICA', 500, 1240);
+  ctx.fillText(data.dateOfBirth.replace(/-/g, '/'), 500, 1300);
+  ctx.fillText(data.sex === '1' ? 'M' : 'F', 1000, 1360);
+  ctx.fillText(data.passportNumber || '123456789', 1050, 1050);
 
-  // Simple MRZ Generation
+  // MRZ (TD3)
   const surname = (data.lastName.toUpperCase() + '<<<<<<<<<<<<<<<<<<<<<<<<').slice(0, 39);
   const names = (data.firstName.toUpperCase() + '<<<<<<<<<<<<<<<<<<<<<<<<').slice(0, 44 - surname.length - 2);
   const line1 = `P<USA${surname}<<${names}`.padEnd(44, '<');
@@ -100,9 +148,9 @@ async function renderPassport(jsonFile) {
   const exp = data.expiryDate.slice(2).replace(/-/g, '');
   const line2 = `${data.passportNumber || '123456789'}0USA${dob}6${data.sex === '1' ? 'M' : 'F'}${exp}5<<<<<<<<<<<<<<06`.padEnd(44, '<');
 
-  ctx.font = 'bold 14px "Courier New", monospace';
-  ctx.fillText(line1, 35, 545);
-  ctx.fillText(line2, 35, 560);
+  ctx.font = 'bold 42px "Courier New", monospace';
+  ctx.fillText(line1, 100, 1530);
+  ctx.fillText(line2, 100, 1580);
 
   fs.writeFileSync(path.join(responsesDir, `${id}_passport.jpg`), canvas.toBuffer('image/jpeg'));
   console.log(`[${id}] Completed Passport!`);
@@ -121,7 +169,9 @@ const args = process.argv.slice(2);
 if (args.length > 0) {
   processRequest(args[0]).catch(console.error);
 } else {
-  fs.readdirSync(requestsDir).filter(f => f.endsWith('.json')).forEach(f => {
-    processRequest(path.join(requestsDir, f)).catch(console.error);
-  });
+  if (fs.existsSync(requestsDir)) {
+    fs.readdirSync(requestsDir).filter(f => f.endsWith('.json')).forEach(f => {
+      processRequest(path.join(requestsDir, f)).catch(console.error);
+    });
+  }
 }
